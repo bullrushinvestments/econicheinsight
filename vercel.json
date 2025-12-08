@@ -1,0 +1,153 @@
+interface BuildCommand {
+  command: string;
+  output?: string;
+}
+
+interface EnvVariables {
+  [key: string]: string | undefined;
+}
+
+interface HeaderRule {
+  source: string;
+  headers: Array<{ key: string; value: string }>;
+}
+
+interface CacheStrategy {
+  rules: Array<{
+    urlPathPattern: string;
+    headers: Array<{ key: string; value?: string }>;
+  }>;
+}
+
+interface FrameworkSettings {
+  vercel?: { [key: string]: any };
+  netlify?: { [key: string]: any };
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvVariables;
+  redirectRules: Array<{
+    source: string;
+    destination: string;
+    statusCode: number;
+  }>;
+  headers: Array<HeaderRule>;
+  cacheStrategies: CacheStrategy;
+  frameworkSettings?: FrameworkSettings;
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: "next build && next export",
+    output: ".out"
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_STRIPE_KEY: process.env.NEXT_PUBLIC_STRIPE_KEY
+  },
+  redirectRules: [
+    { source: "/old-url", destination: "/new-url", statusCode: 301 }
+  ],
+  headers: [
+    {
+      source: "/",
+      headers: [
+        { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+        { key: "X-Frame-Options", value: "DENY" }
+      ]
+    }
+  ],
+  cacheStrategies: {
+    rules: [
+      { urlPathPattern: "/api/*", headers: [{ key: "Cache-Control", value: "s-maxage=1, stale-while-revalidate=59" }] },
+      { urlPathPattern: "*.png", headers: [{ key: "Cache-Control", value: "public, max-age=31536000" }] }
+    ]
+  },
+  frameworkSettings: {
+    vercel: {
+      buildCommand: "npm run build",
+      outDir: ".out"
+    },
+    netlify: {
+      publish: ".out"
+    }
+  }
+};
+
+interface BuildCommand {
+  command: string;
+  output?: string;
+}
+
+interface EnvVariables {
+  [key: string]: string | undefined;
+}
+
+interface HeaderRule {
+  source: string;
+  headers: Array<{ key: string; value: string }>;
+}
+
+interface CacheStrategy {
+  rules: Array<{
+    urlPathPattern: string;
+    headers: Array<{ key: string; value?: string }>;
+  }>;
+}
+
+interface FrameworkSettings {
+  vercel?: { [key: string]: any };
+  netlify?: { [key: string]: any };
+}
+
+interface DeployConfig {
+  build: BuildCommand;
+  env: EnvVariables;
+  redirectRules: Array<{
+    source: string;
+    destination: string;
+    statusCode: number;
+  }>;
+  headers: Array<HeaderRule>;
+  cacheStrategies: CacheStrategy;
+  frameworkSettings?: FrameworkSettings;
+}
+
+export const deployConfig: DeployConfig = {
+  build: {
+    command: "next build && next export",
+    output: ".out"
+  },
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_STRIPE_KEY: process.env.NEXT_PUBLIC_STRIPE_KEY
+  },
+  redirectRules: [
+    { source: "/old-url", destination: "/new-url", statusCode: 301 }
+  ],
+  headers: [
+    {
+      source: "/",
+      headers: [
+        { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+        { key: "X-Frame-Options", value: "DENY" }
+      ]
+    }
+  ],
+  cacheStrategies: {
+    rules: [
+      { urlPathPattern: "/api/*", headers: [{ key: "Cache-Control", value: "s-maxage=1, stale-while-revalidate=59" }] },
+      { urlPathPattern: "*.png", headers: [{ key: "Cache-Control", value: "public, max-age=31536000" }] }
+    ]
+  },
+  frameworkSettings: {
+    vercel: {
+      buildCommand: "npm run build",
+      outDir: ".out"
+    },
+    netlify: {
+      publish: ".out"
+    }
+  }
+};
